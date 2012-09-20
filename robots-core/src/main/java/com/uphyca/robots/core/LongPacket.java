@@ -32,37 +32,6 @@ public class LongPacket extends Packet {
         private Builder() {
         }
 
-        //        public LongPacket.Builder header(byte[] newHeader) {
-        //            packet.header = newHeader;
-        //            return this;
-        //        }
-        //
-        //        public LongPacket.Builder header(int... newHeader) {
-        //            return header(Bytes.of(newHeader));
-        //        }
-        //
-        //        public LongPacket.Builder id(byte newId) {
-        //            packet.id = newId;
-        //            return this;
-        //        }
-        //
-        //        public LongPacket.Builder id(int newId) {
-        //            return id(Bytes.of(newId));
-        //        }
-        //
-        //        public LongPacket.Builder flag(byte newFlag) {
-        //            packet.flag = newFlag;
-        //            return this;
-        //        }
-        //
-        //        public LongPacket.Builder flag(int newFlag) {
-        //            return flag(Bytes.of(newFlag));
-        //        }
-        //
-        //        public LongPacket.Builder flag(boolean... newFlag) {
-        //            return flag(Bytes.of(newFlag));
-        //        }
-
         public LongPacket.Builder address(byte newAddress) {
             packet.setAddress(newAddress);
             return this;
@@ -124,34 +93,6 @@ public class LongPacket extends Packet {
         setHeader(Bytes.of(0xFA, 0xAF));
     }
 
-    //    public static LongPacket.Builder header(byte[] newHeader) {
-    //        return builder().header(newHeader);
-    //    }
-    //
-    //    public static LongPacket.Builder header(int... newHeader) {
-    //        return builder().header(newHeader);
-    //    }
-    //
-    //    public static LongPacket.Builder id(byte newId) {
-    //        return builder().id(newId);
-    //    }
-    //
-    //    public static LongPacket.Builder id(int newId) {
-    //        return builder().id(newId);
-    //    }
-    //
-    //    public static LongPacket.Builder flag(byte newFlag) {
-    //        return builder().flag(newFlag);
-    //    }
-    //
-    //    public static LongPacket.Builder flag(boolean... newFlag) {
-    //        return builder().flag(newFlag);
-    //    }
-    //
-    //    public static LongPacket.Builder flag(int newFlag) {
-    //        return builder().flag(newFlag);
-    //    }
-
     public static LongPacket.Builder address(byte newAddress) {
         return builder().address(newAddress);
     }
@@ -167,22 +108,6 @@ public class LongPacket extends Packet {
     public static LongPacket.Builder length(int newLength) {
         return builder().length(newLength);
     }
-
-    //    public static LongPacket.Builder count(byte newCount) {
-    //        return builder().count(newCount);
-    //    }
-    //
-    //    public static LongPacket.Builder count(int newCount) {
-    //        return builder().count(newCount);
-    //    }
-
-    //    public static LongPacket.Builder data(byte[] newData) {
-    //        return builder().data(newData);
-    //    }
-    //
-    //    public static LongPacket.Builder data(int... newData) {
-    //        return builder().data(newData);
-    //    }
 
     public static LongPacket.Builder data(ShortPacket... newData) {
         return builder().data(newData);

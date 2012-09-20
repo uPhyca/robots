@@ -17,6 +17,7 @@ package com.uphyca.robots.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * byte型変数を扱うためのユーティリティメソッドを定義するクラス.
@@ -90,5 +91,13 @@ public abstract class Bytes {
                 dest |= (0x01 << (len - i - 1));
         }
         return dest;
+    }
+
+    public static byte[] of(Iterable<Sendable> src) throws IOException {
+        ByteArrayOutputStream buffer = Bytes.stream();
+        for (Sendable o : src) {
+            o.send(buffer);
+        }
+        return buffer.toByteArray();
     }
 }

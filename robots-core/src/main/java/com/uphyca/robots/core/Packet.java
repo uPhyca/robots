@@ -18,7 +18,6 @@ package com.uphyca.robots.core;
 import static com.uphyca.robots.core.PacketUtils.a;
 import static com.uphyca.robots.core.PacketUtils.updateChecksum;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -172,11 +171,8 @@ public abstract class Packet implements Sendable {
     }
 
     public void send(OutputStream out) throws IOException {
-        ByteArrayOutputStream buffer = Bytes.stream();
-        for (Sendable o : data) {
-            o.send(buffer);
-        }
-        int dataSize = buffer.size();
+        byte[] rawData = Bytes.of(data);
+        int dataSize = rawData.length;
         int end = 7 + dataSize + 1;
         byte[] b = new byte[end];
         a(b, 0, header);
@@ -186,7 +182,7 @@ public abstract class Packet implements Sendable {
         // lengthが明示的にセットされた場合は、その値を使う.
         a(b, 5, lengthSet ? length : dataSize);
         a(b, 6, count);
-        a(b, 7, buffer.toByteArray());
+        a(b, 7, rawData);
         updateChecksum(b, 0, end);
         out.write(b, 0, end);
     }

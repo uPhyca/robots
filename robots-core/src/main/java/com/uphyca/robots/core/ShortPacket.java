@@ -141,15 +141,6 @@ public class ShortPacket extends Packet {
         private Builder() {
         }
 
-        //        public ShortPacket.Builder header(byte[] newHeader) {
-        //            packet.setHeader(newHeader);
-        //            return this;
-        //        }
-        //
-        //        public ShortPacket.Builder header(int... newHeader) {
-        //            return header(Bytes.of(newHeader));
-        //        }
-
         public ShortPacket.Builder id(byte newId) {
             packet.setId(newId);
             return this;
@@ -223,14 +214,6 @@ public class ShortPacket extends Packet {
     ShortPacket() {
         setHeader(Bytes.of(0xFA, 0xAF));
     }
-
-    //    public static ShortPacket.Builder header(byte[] newHeader) {
-    //        return builder().header(newHeader);
-    //    }
-    //
-    //    public static ShortPacket.Builder header(int... newHeader) {
-    //        return builder().header(newHeader);
-    //    }
 
     public static ShortPacket.Builder id(byte newId) {
         return builder().id(newId);

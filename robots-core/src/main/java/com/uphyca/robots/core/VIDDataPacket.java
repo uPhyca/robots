@@ -62,9 +62,7 @@ class VIDDataPacket implements Sendable {
     public void send(OutputStream out) throws IOException {
         ByteArrayOutputStream buffer = Bytes.stream();
         buffer.write(new byte[] { data.id() });
-        for (Sendable o : data.data()) {
-            o.send(buffer);
-        }
+        buffer.write(Bytes.of(data.data()));
         out.write(buffer.toByteArray());
     }
 }
