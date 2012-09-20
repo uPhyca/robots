@@ -51,25 +51,6 @@ public class LongPacket extends Packet {
             return length(Bytes.of(newLength));
         }
 
-        //        public LongPacket.Builder count(byte newCount) {
-        //            packet.setCount(newCount);
-        //            return this;
-        //        }
-        //
-        //        public LongPacket.Builder count(int newCount) {
-        //            return count(Bytes.of(newCount));
-        //        }
-
-        //        public LongPacket.Builder data(byte[] newData) {
-        //            packet.data()
-        //                  .add(ByteArrayPacket.data(newData));
-        //            return this;
-        //        }
-        //
-        //        public LongPacket.Builder data(int... newData) {
-        //            return data(Bytes.of(newData));
-        //        }
-
         public LongPacket.Builder data(ShortPacket... newData) {
             for (ShortPacket o : newData) {
                 packet.data()

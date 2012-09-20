@@ -1,44 +1,29 @@
 package com.uphyca.robots.core;
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
-public class ReturnPacket {
+/**
+ * 
+ * RS303MR/RS304MD 取扱説明書 Ver1.13 より.
+ *
+ * Flagsでサーボにリターンパケットの要求をした時に、サーボから送られるパケットです。
+ * 
+ * <dl>
+ * 
+ * <dt>パケット構成</dt>
+ * <dd>[Header][ID][Flag][Address][Length][Count][Data][Sum]</dd>
+ *
+ * </dl>
+ *
+ * TODO 続き書く
+ */
+public class ReturnPacket extends Packet {
 
-    public static ReturnPacket map(ByteArrayInputStream in) {
-        // TODO Auto-generated method stub
+    public static ReturnPacket map(InputStream in) {
+
         return null;
     }
 
-    public byte[] header() {
-        return null;
+    ReturnPacket() {
     }
-
-    public byte id() {
-        return 0;
-    }
-
-    public byte flag() {
-        return 0;
-    }
-
-    public byte address() {
-        return 0;
-    }
-
-    public byte length() {
-        return 0;
-    }
-
-    public byte count() {
-        return 0;
-    }
-
-    public byte[] data() {
-        return null;
-    }
-
-    public byte sum() {
-        return 0;
-    }
-
 }
