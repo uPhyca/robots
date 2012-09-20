@@ -14,3 +14,12 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
+
+.classpath
+.project
+.settings/
+
+target/
+
+libs/
+
