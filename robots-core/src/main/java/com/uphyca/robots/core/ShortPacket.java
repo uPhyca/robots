@@ -147,6 +147,15 @@ public class ShortPacket implements Packet {
     public static final class Builder {
         private final ShortPacket packet = new ShortPacket();
 
+        public ShortPacket.Builder header(byte[] newHeader) {
+            packet.header = newHeader;
+            return this;
+        }
+
+        public ShortPacket.Builder header(int... newHeader) {
+            return header(Bytes.of(newHeader));
+        }
+
         public ShortPacket.Builder id(byte newId) {
             packet.id = newId;
             return this;
@@ -220,11 +229,7 @@ public class ShortPacket implements Packet {
     @SuppressWarnings("unused")
     private static final int MAX_PACKET_BYTES = 127;
 
-    /**
-     * ショートパケットのヘッダ.
-     */
-    private static final byte[] DEFAULT_HEADER = { (byte) 0xFA, (byte) 0xAF };
-
+    protected byte[] header;
     protected byte id;
     protected byte flag;
     protected byte address;
@@ -236,6 +241,14 @@ public class ShortPacket implements Packet {
 
     private static ShortPacket.Builder builder() {
         return new ShortPacket.Builder();
+    }
+
+    public static ShortPacket.Builder header(byte[] newHeader) {
+        return builder().header(newHeader);
+    }
+
+    public static ShortPacket.Builder header(int... newHeader) {
+        return builder().header(newHeader);
     }
 
     public static ShortPacket.Builder id(byte newId) {
@@ -293,7 +306,7 @@ public class ShortPacket implements Packet {
     public void send(OutputStream out) throws IOException {
         int end = 7 + Bytes.length(data) + 1;
         byte[] b = new byte[end];
-        a(b, 0, DEFAULT_HEADER);
+        a(b, 0, header);
         a(b, 2, id);
         a(b, 3, flag);
         a(b, 4, address);

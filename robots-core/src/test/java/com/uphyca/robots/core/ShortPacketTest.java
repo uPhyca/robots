@@ -37,7 +37,8 @@ public class ShortPacketTest {
     public void testThatPacketChecksumIsValid() throws IOException {
 
         // Given
-        ShortPacket packet = ShortPacket.id(0x01)
+        ShortPacket packet = ShortPacket.header(0xFA, 0xAF)
+                                        .id(0x01)
                                         .flag(0x00)
                                         .address(0x1E)
                                         .length(0x02)
@@ -63,7 +64,8 @@ public class ShortPacketTest {
     public void testThatPackeWithoutDatatSent() throws IOException {
 
         // Given
-        ShortPacket packet = ShortPacket.id(0x01)
+        ShortPacket packet = ShortPacket.header(0xFA, 0xAF)
+                                        .id(0x01)
                                         .flag(0x40)
                                         .address(0xFF)
                                         .length(0x00)
@@ -88,7 +90,8 @@ public class ShortPacketTest {
     public void testThatPackeMemoryMapDataOrbitalAddressSent() throws IOException {
 
         // Given
-        ShortPacket packet = ShortPacket.id(0x01)
+        ShortPacket packet = ShortPacket.header(0xFA, 0xAF)
+                                        .id(0x01)
                                         .flag(true, true, true, true)
                                         .address(0x2A)
                                         .length(0x02)
