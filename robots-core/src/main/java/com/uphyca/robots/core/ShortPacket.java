@@ -172,12 +172,30 @@ public class ShortPacket extends Packet {
             return address(Bytes.of(newAddress));
         }
 
+        /**
+         * このショートパケットのLengthフィールドを設定する.
+         * 
+         * LengthフィールドはDataフィールドの値から自動的に計算されるが、このメソッドを使って明示的に設定した場合は、
+         * このメソッドの呼び出しで設定されたLengthを使う.
+         * 
+         * @param newLength
+         * @return
+         */
         public ShortPacket.Builder length(byte newLength) {
             packet.setLength(newLength);
             packet.setLengthSet(true);
             return this;
         }
 
+        /**
+         * このショートパケットのLengthフィールドを設定する.
+         * 
+         * LengthフィールドはDataフィールドの値から自動的に計算されるが、このメソッドを使って明示的に設定した場合は、
+         * このメソッドの呼び出しで設定されたLengthを使う.
+         * 
+         * @param newLength
+         * @return
+         */
         public ShortPacket.Builder length(int newLength) {
             return length(Bytes.of(newLength));
         }
@@ -193,7 +211,7 @@ public class ShortPacket extends Packet {
 
         public ShortPacket.Builder data(byte[] newData) {
             packet.data()
-                  .add(ByteArrayPacket.data(newData));
+                  .add(RawPacket.data(newData));
             return this;
         }
 
@@ -204,7 +222,6 @@ public class ShortPacket extends Packet {
         public ShortPacket build() {
             return packet;
         }
-
     }
 
     private static ShortPacket.Builder builder() {

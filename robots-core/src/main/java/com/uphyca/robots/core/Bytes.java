@@ -25,16 +25,6 @@ import java.io.IOException;
 public abstract class Bytes {
 
     /**
-     * byte配列型引数 src の長さを返す.
-     * 
-     * @param src
-     * @return
-     */
-    public static int length(byte[] src) {
-        return src == null ? 0 : src.length;
-    }
-
-    /**
      * {@link ByteArrayOutputStream} を作成する.
      * 
      * @return
@@ -93,6 +83,13 @@ public abstract class Bytes {
         return dest;
     }
 
+    /**
+     * {@link Sendable}オブジェクトの出力をbyte配列型にして返す.
+     * 
+     * @param src
+     * @return
+     * @throws IOException
+     */
     public static byte[] of(Iterable<Sendable> src) throws IOException {
         ByteArrayOutputStream buffer = Bytes.stream();
         for (Sendable o : src) {
@@ -100,4 +97,18 @@ public abstract class Bytes {
         }
         return buffer.toByteArray();
     }
+
+    /**
+     * {@link Sendable}オブジェクトの出力をbyte配列型にして返す.
+     * 
+     * @param src
+     * @return
+     * @throws IOException
+     */
+    public static byte[] of(Sendable src) throws IOException {
+        ByteArrayOutputStream buffer = Bytes.stream();
+        src.send(buffer);
+        return buffer.toByteArray();
+    }
+
 }

@@ -187,5 +187,6 @@ public abstract class Packet implements Sendable {
         a(b, 7, rawData);
         updateChecksum(b, 0, end);
         out.write(b, 0, end);
+        out.flush();
     }
 }

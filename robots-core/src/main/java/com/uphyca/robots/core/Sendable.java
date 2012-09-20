@@ -18,7 +18,15 @@ package com.uphyca.robots.core;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * パケットを送信可能なオブジェクトを表すインターフェイス
+ */
 public interface Sendable {
 
+    /**
+     * このオブジェクトの内容を引数 out に送信する.
+     * @param out
+     * @throws IOException
+     */
     void send(OutputStream out) throws IOException;
 }

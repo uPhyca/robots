@@ -76,16 +76,15 @@ public class ReturnPacketTest {
         ByteArrayInputStream in = Bytes.stream(0xFD, 0xDF, 0x01, 0x00, 0x2A, 0x12, 0x01, 0x4E, 0xFB, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0xBA, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, invalidSum);
 
         // When
-        ReturnPacket packet = ReturnPacket.header(in)
-                                          .id(in)
-                                          .flag(in)
-                                          .address(in)
-                                          .length(in)
-                                          .count(in)
-                                          .data(in)
-                                          .sum(in)
-                                          .build();
-
+        ReturnPacket.header(in)
+                    .id(in)
+                    .flag(in)
+                    .address(in)
+                    .length(in)
+                    .count(in)
+                    .data(in)
+                    .sum(in)
+                    .build();
     }
 
 }

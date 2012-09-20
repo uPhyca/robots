@@ -18,15 +18,18 @@ package com.uphyca.robots.core;
 import java.io.IOException;
 import java.io.OutputStream;
 
-class ByteArrayPacket implements Sendable {
+/**
+ * バイト列で構成されるパケット.
+ */
+class RawPacket implements Sendable {
 
     private final byte[] data;
 
-    public static ByteArrayPacket data(byte[] newData) {
-        return new ByteArrayPacket(newData);
+    public static RawPacket data(byte[] newData) {
+        return new RawPacket(newData);
     }
 
-    private ByteArrayPacket(byte[] newData) {
+    private RawPacket(byte[] newData) {
         data = newData;
     }
 
