@@ -1,5 +1,9 @@
 package com.uphyca.robots.core;
 
+import static com.uphyca.robots.core.PacketUtils.a;
+import static com.uphyca.robots.core.PacketUtils.calcChecksum;
+
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -19,11 +23,114 @@ import java.io.InputStream;
  */
 public class ReturnPacket extends Packet {
 
-    public static ReturnPacket map(InputStream in) {
+    public static final class Builder {
+        private final ReturnPacket packet = new ReturnPacket();
 
-        return null;
+        private Builder() {
+        }
+
+        public ReturnPacket.Builder header(InputStream newHeader) throws IOException {
+            byte[] buffer = new byte[2];
+            newHeader.read(buffer);
+            packet.setHeader(buffer);
+            return this;
+        }
+
+        public ReturnPacket.Builder id(InputStream newId) throws IOException {
+            byte[] buffer = new byte[1];
+            newId.read(buffer);
+            packet.setId(buffer[0]);
+            return this;
+        }
+
+        public ReturnPacket.Builder flag(InputStream newFlag) throws IOException {
+            byte[] buffer = new byte[1];
+            newFlag.read(buffer);
+            packet.setFlag(buffer[0]);
+            return this;
+        }
+
+        public ReturnPacket.Builder address(InputStream newAddress) throws IOException {
+            byte[] buffer = new byte[1];
+            newAddress.read(buffer);
+            packet.setAddress(buffer[0]);
+            return this;
+        }
+
+        public ReturnPacket.Builder length(InputStream newLength) throws IOException {
+            byte[] buffer = new byte[1];
+            newLength.read(buffer);
+            packet.setLength(buffer[0]);
+            return this;
+        }
+
+        public ReturnPacket.Builder count(InputStream newCount) throws IOException {
+            byte[] buffer = new byte[1];
+            newCount.read(buffer);
+            packet.setCount(buffer[0]);
+            return this;
+        }
+
+        public ReturnPacket.Builder data(InputStream newData) throws IOException {
+            byte[] buffer = new byte[packet.length()];
+            newData.read(buffer);
+            packet.data()
+                  .add(ByteArrayPacket.data(buffer));
+            return this;
+        }
+
+        public ReturnPacket.Builder sum(InputStream newSum) throws IOException {
+            byte[] buffer = new byte[1];
+            newSum.read(buffer);
+            byte[] data = new byte[7 + packet.length()];
+            a(data, 0, packet.header());
+            a(data, 2, packet.id());
+            a(data, 3, packet.flag());
+            a(data, 4, packet.address());
+            a(data, 5, packet.length());
+            a(data, 6, packet.count());
+            a(data, 7, Bytes.of(packet.data()));
+
+            byte sumExpected = sum();
+            byte sumActual = buffer[0];
+
+            if (sumExpected != sumActual) {
+                IOException ioe = new IOException("incorrect checksum");
+                ioe.fillInStackTrace();
+                throw ioe;
+            }
+
+            return this;
+        }
+
+        private byte sum() throws IOException {
+            byte[] data = new byte[SUM_OFFSET + packet.length()];
+
+            a(data, 0, packet.header());
+            a(data, 2, packet.id());
+            a(data, 3, packet.flag());
+            a(data, 4, packet.address());
+            a(data, 5, packet.length());
+            a(data, 6, packet.count());
+            a(data, 7, Bytes.of(packet.data()));
+
+            byte sum = calcChecksum(data, 0, data.length + 1);
+            return sum;
+        }
+
+        public ReturnPacket build() {
+            return packet;
+        }
+    }
+
+    private static ReturnPacket.Builder builder() {
+        return new ReturnPacket.Builder();
     }
 
     ReturnPacket() {
+    }
+
+    public static ReturnPacket.Builder header(InputStream in) throws IOException {
+        return builder().header(in);
     }
 }

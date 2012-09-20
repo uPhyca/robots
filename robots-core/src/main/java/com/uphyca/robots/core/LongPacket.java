@@ -27,6 +27,7 @@ package com.uphyca.robots.core;
 public class LongPacket extends Packet {
 
     public static final class Builder {
+
         private final LongPacket packet = new LongPacket();
 
         private Builder() {

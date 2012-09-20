@@ -26,10 +26,17 @@ public abstract class PacketUtils {
     public static void updateChecksum(byte[] buffer,
                                       int start,
                                       int end) {
+        byte sum = calcChecksum(buffer, start, end);
+        buffer[end - 1] = sum;
+    }
+
+    public static byte calcChecksum(byte[] buffer,
+                                    int start,
+                                    int end) {
         byte c = 0;
         for (int i = start + 2, num = end - 1; i < num; ++i)
             c ^= buffer[i];
-        buffer[end - 1] = c;
+        return c;
     }
 
     public static void a(byte[] buffer,

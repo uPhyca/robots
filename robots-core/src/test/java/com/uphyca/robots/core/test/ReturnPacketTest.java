@@ -40,7 +40,15 @@ public class ReturnPacketTest {
         ByteArrayInputStream in = Bytes.stream(0xFD, 0xDF, 0x01, 0x00, 0x2A, 0x12, 0x01, 0x4E, 0xFB, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0xBA, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32);
 
         // When
-        ReturnPacket packet = ReturnPacket.map(in);
+        ReturnPacket packet = ReturnPacket.header(in)
+                                          .id(in)
+                                          .flag(in)
+                                          .address(in)
+                                          .length(in)
+                                          .count(in)
+                                          .data(in)
+                                          .sum(in)
+                                          .build();
 
         // Then
         assertThat(packet.header(), is(Bytes.of(0xFD, 0xDF)));
@@ -52,4 +60,32 @@ public class ReturnPacketTest {
         assertThat(Bytes.of(packet.data()), is(Bytes.of(0x4E, 0xFB, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0xBA, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
         //assertThat(packet.sum(), is(Bytes.of(0x32)));
     }
+
+    /**
+     * パケットが正しく復元されること.
+     * 
+     * RS303MR/RS304MD 取扱説明書 Ver1.13 P.39 No.48/No.49 現在負荷(2バイト、Hex表記、Read)の例より.
+     * 
+     * チェックサムが不正な場合、例外を投げること.
+     */
+    @Test(expected = IOException.class)
+    public void testThatThrowsReturnPacketDecodedFail() throws IOException {
+
+        // Given
+        byte invalidSum = 0x66;
+        ByteArrayInputStream in = Bytes.stream(0xFD, 0xDF, 0x01, 0x00, 0x2A, 0x12, 0x01, 0x4E, 0xFB, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0xBA, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, invalidSum);
+
+        // When
+        ReturnPacket packet = ReturnPacket.header(in)
+                                          .id(in)
+                                          .flag(in)
+                                          .address(in)
+                                          .length(in)
+                                          .count(in)
+                                          .data(in)
+                                          .sum(in)
+                                          .build();
+
+    }
+
 }

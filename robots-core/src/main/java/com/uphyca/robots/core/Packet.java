@@ -43,6 +43,8 @@ import java.util.List;
  */
 public abstract class Packet implements Sendable {
 
+    protected static final int SUM_OFFSET = /*header*/2 + /*ID*/1 + /*Flag*/1 + /*Address*/1 + /*Length*/1 + /*Count*/1;
+
     private byte[] header;
     private byte id;
     private byte flag;
@@ -173,7 +175,7 @@ public abstract class Packet implements Sendable {
     public void send(OutputStream out) throws IOException {
         byte[] rawData = Bytes.of(data);
         int dataSize = rawData.length;
-        int end = 7 + dataSize + 1;
+        int end = SUM_OFFSET + dataSize + 1;
         byte[] b = new byte[end];
         a(b, 0, header);
         a(b, 2, id);
