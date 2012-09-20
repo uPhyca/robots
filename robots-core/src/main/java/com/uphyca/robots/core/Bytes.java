@@ -15,6 +15,7 @@
  */
 package com.uphyca.robots.core;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -39,6 +40,16 @@ public abstract class Bytes {
      */
     public static ByteArrayOutputStream stream() {
         return new ByteArrayOutputStream();
+    }
+
+    /**
+     * {@link ByteArrayInputStream} を作成する.
+     * 
+     * @param src
+     * @return
+     */
+    public static ByteArrayInputStream stream(int... src) {
+        return new ByteArrayInputStream(Bytes.of(src));
     }
 
     /**
