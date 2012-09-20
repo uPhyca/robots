@@ -1,9 +1,6 @@
 /*
  * Copyright (C) 2012 uPhyca Inc.
  * 
- * Base on previous work by
- * Copyright (C) 2011 BRILLIANTSERVICE Co., Ltd. & RT Corporation
- * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,8 +15,14 @@
  */
 package com.uphyca.robots.core;
 
+import static com.uphyca.robots.core.PacketUtils.a;
+import static com.uphyca.robots.core.PacketUtils.updateChecksum;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -39,7 +42,152 @@ import java.io.OutputStream;
  * <dd>サーボにリターンパケットの要求をした時にサーボから送られてくるパケットです。</dd>
  * </dl>
  */
-public interface Packet {
+public abstract class Packet implements Sendable {
 
-    void send(OutputStream out) throws IOException;
+    private byte[] header;
+    private byte id;
+    private byte flag;
+    private byte address;
+    private byte length;
+    private byte count;
+    //private byte[] data;
+    private List<Sendable> data;
+
+    private boolean lengthSet;
+
+    Packet() {
+        data = new ArrayList<Sendable>();
+    }
+
+    /**
+     * @return the header
+     */
+    public byte[] header() {
+        return header;
+    }
+
+    /**
+     * @return the id
+     */
+    public byte id() {
+        return id;
+    }
+
+    /**
+     * @return the flag
+     */
+    public byte flag() {
+        return flag;
+    }
+
+    /**
+     * @return the address
+     */
+    public byte address() {
+        return address;
+    }
+
+    /**
+     * @return the length
+     */
+    public byte length() {
+        return length;
+    }
+
+    /**
+     * @return the count
+     */
+    public byte count() {
+        return count;
+    }
+
+    /**
+     * @return the data
+     */
+    public List<Sendable> data() {
+        return data;
+    }
+
+    /**
+     * @param header the header to set
+     */
+    void setHeader(byte[] header) {
+        this.header = header;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    void setId(byte id) {
+        this.id = id;
+    }
+
+    /**
+     * @param flag the flag to set
+     */
+    void setFlag(byte flag) {
+        this.flag = flag;
+    }
+
+    /**
+     * @param address the address to set
+     */
+    void setAddress(byte address) {
+        this.address = address;
+    }
+
+    /**
+     * @param length the length to set
+     */
+    void setLength(byte length) {
+        this.length = length;
+    }
+
+    /**
+     * @param count the count to set
+     */
+    void setCount(byte count) {
+        this.count = count;
+    }
+
+    /**
+     * @param data the data to set
+     */
+    void setData(List<Sendable> data) {
+        this.data = data;
+    }
+
+    /**
+     * @param lengthSet the lengthSet to set
+     */
+    void setLengthSet(boolean lengthSet) {
+        this.lengthSet = lengthSet;
+    }
+
+    /**
+     * @return
+     */
+    boolean isLengthSet() {
+        return lengthSet;
+    }
+
+    public void send(OutputStream out) throws IOException {
+        ByteArrayOutputStream buffer = Bytes.stream();
+        for (Sendable o : data) {
+            o.send(buffer);
+        }
+        int dataSize = buffer.size();
+        int end = 7 + dataSize + 1;
+        byte[] b = new byte[end];
+        a(b, 0, header);
+        a(b, 2, id);
+        a(b, 3, flag);
+        a(b, 4, address);
+        // lengthが明示的にセットされた場合は、その値を使う.
+        a(b, 5, lengthSet ? length : dataSize);
+        a(b, 6, count);
+        a(b, 7, buffer.toByteArray());
+        updateChecksum(b, 0, end);
+        out.write(b, 0, end);
+    }
 }

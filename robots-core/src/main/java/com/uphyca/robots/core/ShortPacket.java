@@ -1,9 +1,6 @@
 /*
  * Copyright (C) 2012 uPhyca Inc.
  * 
- * Base on previous work by
- * Copyright (C) 2011 BRILLIANTSERVICE Co., Ltd. & RT Corporation
- * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,12 +14,6 @@
  * limitations under the License. 
  */
 package com.uphyca.robots.core;
-
-import static com.uphyca.robots.core.PacketUtils.a;
-import static com.uphyca.robots.core.PacketUtils.updateChecksum;
-
-import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * 
@@ -142,22 +133,25 @@ import java.io.OutputStream;
  * TODO 続き書く.
  * 
  */
-public class ShortPacket implements Packet {
+public class ShortPacket extends Packet {
 
     public static final class Builder {
         private final ShortPacket packet = new ShortPacket();
 
-        public ShortPacket.Builder header(byte[] newHeader) {
-            packet.header = newHeader;
-            return this;
+        private Builder() {
         }
 
-        public ShortPacket.Builder header(int... newHeader) {
-            return header(Bytes.of(newHeader));
-        }
+        //        public ShortPacket.Builder header(byte[] newHeader) {
+        //            packet.setHeader(newHeader);
+        //            return this;
+        //        }
+        //
+        //        public ShortPacket.Builder header(int... newHeader) {
+        //            return header(Bytes.of(newHeader));
+        //        }
 
         public ShortPacket.Builder id(byte newId) {
-            packet.id = newId;
+            packet.setId(newId);
             return this;
         }
 
@@ -166,7 +160,7 @@ public class ShortPacket implements Packet {
         }
 
         public ShortPacket.Builder flag(byte newFlag) {
-            packet.flag = newFlag;
+            packet.setFlag(newFlag);
             return this;
         }
 
@@ -179,7 +173,7 @@ public class ShortPacket implements Packet {
         }
 
         public ShortPacket.Builder address(byte newAddress) {
-            packet.address = newAddress;
+            packet.setAddress(newAddress);
             return this;
         }
 
@@ -188,8 +182,8 @@ public class ShortPacket implements Packet {
         }
 
         public ShortPacket.Builder length(byte newLength) {
-            packet.length = newLength;
-            packet.lengthSet = true;
+            packet.setLength(newLength);
+            packet.setLengthSet(true);
             return this;
         }
 
@@ -198,7 +192,7 @@ public class ShortPacket implements Packet {
         }
 
         public ShortPacket.Builder count(byte newCount) {
-            packet.count = newCount;
+            packet.setCount(newCount);
             return this;
         }
 
@@ -207,7 +201,8 @@ public class ShortPacket implements Packet {
         }
 
         public ShortPacket.Builder data(byte[] newData) {
-            packet.data = newData;
+            packet.data()
+                  .add(ByteArrayPacket.data(newData));
             return this;
         }
 
@@ -221,35 +216,21 @@ public class ShortPacket implements Packet {
 
     }
 
-    /**
-     * ショートパケットで送信できる最大バイト数.
-     * 
-     * TODO レングスチェックする場合にはこの値を使う
-     */
-    @SuppressWarnings("unused")
-    private static final int MAX_PACKET_BYTES = 127;
-
-    protected byte[] header;
-    protected byte id;
-    protected byte flag;
-    protected byte address;
-    protected byte length;
-    protected byte count;
-    protected byte[] data;
-
-    protected boolean lengthSet;
-
     private static ShortPacket.Builder builder() {
         return new ShortPacket.Builder();
     }
 
-    public static ShortPacket.Builder header(byte[] newHeader) {
-        return builder().header(newHeader);
+    ShortPacket() {
+        setHeader(Bytes.of(0xFA, 0xAF));
     }
 
-    public static ShortPacket.Builder header(int... newHeader) {
-        return builder().header(newHeader);
-    }
+    //    public static ShortPacket.Builder header(byte[] newHeader) {
+    //        return builder().header(newHeader);
+    //    }
+    //
+    //    public static ShortPacket.Builder header(int... newHeader) {
+    //        return builder().header(newHeader);
+    //    }
 
     public static ShortPacket.Builder id(byte newId) {
         return builder().id(newId);
@@ -301,20 +282,5 @@ public class ShortPacket implements Packet {
 
     public static ShortPacket.Builder data(int... newData) {
         return builder().data(newData);
-    }
-
-    public void send(OutputStream out) throws IOException {
-        int end = 7 + Bytes.length(data) + 1;
-        byte[] b = new byte[end];
-        a(b, 0, header);
-        a(b, 2, id);
-        a(b, 3, flag);
-        a(b, 4, address);
-        // lengthが明示的にセットされた場合は、その値を使う.
-        a(b, 5, lengthSet ? length : Bytes.length(data));
-        a(b, 6, count);
-        a(b, 7, data);
-        updateChecksum(b, 0, end);
-        out.write(b, 0, end);
     }
 }

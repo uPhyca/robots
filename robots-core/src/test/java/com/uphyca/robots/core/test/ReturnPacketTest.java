@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License. 
  */
-package com.uphyca.robots.core;
+package com.uphyca.robots.core.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -23,6 +23,9 @@ import java.io.IOException;
 
 import org.junit.Ignore;
 import org.junit.Test;
+
+import com.uphyca.robots.core.Bytes;
+import com.uphyca.robots.core.ReturnPacket;
 
 @Ignore
 public class ReturnPacketTest {
