@@ -100,13 +100,16 @@ public class RS485 implements Sendable {
         return new RS485.Builder();
     }
 
+    private static final byte[] HEADER_WITHOUT_RETURN = { Bytes.of(0x53) };
+    private static final byte[] HEADER_WITH_RETURN = { Bytes.of(0x54) };
+
     private byte[] header;
     private Packet data;
     private byte footer;
     private boolean footerSet;
 
     RS485() {
-        setHeader(new byte[] { Bytes.of(0x53) });
+        setHeader(HEADER_WITHOUT_RETURN);
     }
 
     public static RS485.Builder data(Packet newData) {
@@ -144,7 +147,7 @@ public class RS485 implements Sendable {
     @Override
     public void send(OutputStream out) throws IOException {
         // Write RPU-10 Header
-        out.write(header);
+        out.write(footerSet ? HEADER_WITH_RETURN : header);
 
         // Write RPU-10 Length
         byte[] rawData = Bytes.of(data);
