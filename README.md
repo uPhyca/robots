@@ -11,6 +11,10 @@ Tested servo motors are:
 
 Example:
 =====
+
+Torque On/Off
+===
+
     private static void torque(boolean on,
                                OutputStream out) throws IOException {
         RS485 packet = RS485.data(ShortPacket.id(0x01)
@@ -22,3 +26,22 @@ Example:
                             .build();
         packet.send(out);
     }
+
+Send Long packet
+===
+        LongPacket packet = LongPacket.address(0x1E)
+                                      .length(0x03)
+                                      .data(ShortPacket.id(0x01)
+                                                       .data(0x64, 0x00)
+                                                       .build())
+                                      .data(ShortPacket.id(0x02)
+                                                       .data(0x64, 0x00)
+                                                       .build())
+                                      .data(ShortPacket.id(0x05)
+                                                       .data(0xF4, 0x01)
+                                                       .build())
+                                      .build();
+
+        ByteArrayOutputStream out = Bytes.stream();
+
+        packet.send(out);
